@@ -3,6 +3,7 @@ const express = require('express');
 const server = express();
 
 const Games = require('../games/gamesModel');
+const GamesTestdb = require('../games/gamesTestdbModel');
 
 server.use(express.json());
 
@@ -26,6 +27,21 @@ server.get('/', (req,res) => {
       res.status(500).json(err);
     }
   })
+
+  server.get('/test_db', async(req,res) => {
+
+    try{
+      const games = await GamesTestdb.getAll()   
+     // console.log(games);
+      res.status(200).json(games);
+    }
+    catch (err){
+      res.status(500).json(err);
+    }
+  })
+
+
+
 
 server.get('/games/:id', async(req, res) => {
     const {id} = req.params;

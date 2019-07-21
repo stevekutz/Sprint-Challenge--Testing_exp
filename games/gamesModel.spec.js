@@ -160,7 +160,7 @@ describe('Sprint db tests ', () => {
             let res = await req(server).get('/games');
             expect(res.status).toBe(200);
             expect(res.body).toEqual(testGames);
-            console.log('>>>>testGames  \n', testGames);
+          //  console.log('>>>>testGames  \n', testGames);
        
             expect(testGames).toHaveLength(3);    
             const deleteResult = await Games.remove(3);
@@ -169,7 +169,7 @@ describe('Sprint db tests ', () => {
             res = await req(server).get('/games');
             expect(res.status).toBe(200);
            // expect(res.body).toEqual(testGames);
-            console.log('>>>> res.body  \n', res.body);
+           // console.log('>>>> res.body  \n', res.body);
             expect(res.body).toHaveLength(2);
         })
 
@@ -187,7 +187,7 @@ describe('Sprint db tests ', () => {
 
             res = await req(server).get('/games');
             expect(res.status).toBe(200);
-            console.log('>>>> res.body  \n', res.body);
+       //     console.log('>>>> res.body  \n', res.body);
             expect(res.body).toHaveLength(3);
         })
 
