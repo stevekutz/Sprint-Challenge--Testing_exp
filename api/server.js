@@ -3,7 +3,10 @@ const express = require('express');
 const server = express();
 
 const Games = require('../games/gamesModel');
-const GamesTestdb = require('../games/gamesTestdbModel');
+// const GamesTestdb = require('../games/gamesTestdbModel');
+
+// add router path
+const TestGamesRouter = require('../games/gamesTestdb-Router');
 
 server.use(express.json());
 
@@ -14,6 +17,9 @@ server.get('/', (req,res) => {
     res.status(200).json({message: `Sprint TESTING server sanity check !!! `})
 
 });
+
+// mount route for test db
+server.use('/test_db', TestGamesRouter);
 
 // GET all games
   server.get('/games', async(req,res) => {
@@ -27,7 +33,7 @@ server.get('/', (req,res) => {
       res.status(500).json(err);
     }
   })
-
+/*
   server.get('/test_db', async(req,res) => {
 
     try{
@@ -39,7 +45,7 @@ server.get('/', (req,res) => {
       res.status(500).json(err);
     }
   })
-
+*/
 
 
 
