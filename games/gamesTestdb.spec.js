@@ -6,7 +6,6 @@ const req = require('supertest');
 
 //const knexInstance = require('knex')(config);  // sqlite does not support inserting default values
 
-
 describe('Experiments with test_db TESTS  ', () => {
 
 /*
@@ -108,9 +107,32 @@ describe('Experiments with test_db TESTS  ', () => {
                 res2 = await req(server).post('/test_db').send(noGenre);
                 expect(res2.status).toBe(422);
 
-        
             })
 
+        })
+
+        describe('DELETE tests', () => {
+            it('should delete a game that was added', async () => {
+                const testGame = {
+                    'title': 'gonna get deleted',
+                    'genre': 'arcade',
+                    'releaseYear': 1880,
+                }
+
+                let gameList = await GamesTest.getAll();
+                expect(gameList).toHaveLength(5);
+
+                const addedGame = await GamesTest.insert(testGame);
+        
+                gameList = await GamesTest.getAll();
+                expect(gameList).toHaveLength(6);
+
+                await GamesTest.remove(addedGame.id);
+                gameList = await GamesTest.getAll();
+                expect(gameList).toHaveLength(5);
+
+
+            })
         })
 
     })    
