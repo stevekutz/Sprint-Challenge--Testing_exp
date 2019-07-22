@@ -3,29 +3,29 @@ const db = require('../data/dbConfig');
 const GamesTest = require('./gamesTestdbModel');
 const req = require('supertest');
 
-
-//const knexInstance = require('knex')(config);  // sqlite does not support inserting default values
-const knexInstance = require('knex')({
-    client: 'sqlite3',
-    connection: {
-      filename: './data/test.db3',
-    },
-    useNullAsDefault: true,
-    migrations: {
-      directory: './data/migrations',
-    },
-    seeds: {
-      directory: './data/seeds',
-    },
-  }
+const knexInstance = require('knex')(
+    {
+        client: 'sqlite3',
+        connection: {
+        filename: './data/test.db3',
+        },
+        useNullAsDefault: true,
+        migrations: {
+        directory: './data/migrations',
+        },
+        seeds: {
+        directory: './data/seeds',
+        },
+    }
   );
 
+//
 
 describe('Experiments with test_db TESTS  ', () => {
 
     
     beforeEach(async () => {
-        await knexInstance.seed.run();
+        await knexInstance.seed.run(process.env.DB_ENV);
     })
     
 
