@@ -1,5 +1,5 @@
 
-// MAKE sure you run npx knex seed:run --env=testing
+// MAKE sure you run yarn knex seed:run --env=testing
 
 
 exports.seed = async function(knex) {
