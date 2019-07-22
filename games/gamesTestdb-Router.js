@@ -18,11 +18,12 @@ router.get('/', async(req,res) => {
     }
   })
 
-router.post('/', noDupGames, async(req, res) => {
+  // MW ONLY affects post method, NOT using insert directly !
+router.post('/',  noDupGames, async(req, res) => {
 
     try{
         if(req.body.title === '' || req.body.genre === '') {
-            req.status(422).sjon({
+            res.status(422).json({
                 message: `Please add title & genre item`
             })
         } else {
@@ -41,7 +42,7 @@ server.get('/:id', async(req, res) => {
     const {id} = req.params;
     
     try{
-      const game = await Games.findById(id);
+      const game = await GamesTestdb.findById(id);
      // console.log('server promise Game', game);
        
       if(game){

@@ -21,6 +21,8 @@ server.get('/', (req,res) => {
 // mount route for test db
 server.use('/test_db', TestGamesRouter);
 
+
+
 // GET all games
   server.get('/games', async(req,res) => {
 
