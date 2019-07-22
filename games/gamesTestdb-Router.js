@@ -19,7 +19,8 @@ router.get('/', async(req,res) => {
   })
 
   // MW ONLY affects post method, NOT using insert directly !
-router.post('/',  noDupGames, async(req, res) => {
+  // router.post('/',  noDupGames, async(req, res) => {
+  router.post('/',  noDupGames, async(req, res) => {
 
     try{
         if(req.body.title === '' || req.body.genre === '') {
