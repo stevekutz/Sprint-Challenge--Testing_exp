@@ -18,7 +18,7 @@ router.get('/', async(req,res) => {
     }
   })
 
-router.post('/', async(req, res) => {
+router.post('/', noDupGames, async(req, res) => {
 
     try{
         if(req.body.title === '' || req.body.genre === '') {
@@ -37,6 +37,73 @@ router.post('/', async(req, res) => {
       }
 })
 
+server.get('/:id', async(req, res) => {
+    const {id} = req.params;
+    
+    try{
+      const game = await Games.findById(id);
+     // console.log('server promise Game', game);
+       
+      if(game){
+        res.status(200).json(game)
+      } else {
+        res.status(404).json({
+          message: `${id} not found`
+        })
+      }
+    }
+    catch (err) {
+      res.status(500).json({
+        message: `ERROR getting Game id`
+      });
+    }
+  })
+
+server.delete('/:id', async(req, res) => {
+    const {id} = req.params;
+    
+    try{
+      const game = await GamesTestdb.remove(id);
+      console.log('server promise Game', game)
+       
+      if(game){
+        res.status(200).json(game)
+      } else {
+        res.status(404).json({
+          message: ` Game with ${id} not found`
+        })
+      }
+    }
+    catch (err) {
+      res.status(500).json({
+        message: `ERROR in delete`
+      });
+    }
+  })
+
+
+
+
+// custom middleware
+async function noDupGames(req, res, next) {
+    const {title} = req.body;
+
+    try {
+        const titleExists = await GamesTestdb.findByTitle(title);
+        if(titleExists) {
+            res.status(405).json({
+                message: ` Game ${title} already exits, not added`
+            })
+        } else {
+            next();
+        } 
+    }   
+    catch (err) {
+        res.status(500).json({
+          message: `ERROR with the MW`
+        });
+      }
+}
 
 
 module.exports = router;

@@ -2,7 +2,7 @@ const db = require('../data/dbConfig');
 
 module.exports = {
     insert,
-//    update,
+    update,
     remove,
     getAll,
     findById,
@@ -15,6 +15,12 @@ async function insert(game) {
 
     return findById(id);
 }
+
+async function update(id, changes) {
+    return db('foods')
+      .where({id})
+      .update(changes);
+  }
 
 function remove(id) {
     return db('test_db')
