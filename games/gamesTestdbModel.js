@@ -17,7 +17,7 @@ async function insert(game) {
 }
 
 async function update(id, changes) {
-    return db('foods')
+    return db('test_db')
       .where({id})
       .update(changes);
   }

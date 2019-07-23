@@ -2,7 +2,7 @@ const db = require('../data/dbConfig');
 
 module.exports = {
     insert,
-//    update,
+    update,
     remove,
     getAll,
     findById,
@@ -36,4 +36,10 @@ function findByTitle(title) {
     return db('games')
     .where({title})
     .first();
+  }
+
+  async function update(id, changes) {
+    return db('games')
+      .where({id})
+      .update(changes);
   }

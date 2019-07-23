@@ -1,6 +1,8 @@
 const express = require('express');
 const server = express();
 const router = express.Router();
+const helmet = require('helmet');
+//router.use(helmet()); /// added here BUT not in server
 
 const GamesTestdb = require('../games/gamesTestdbModel');
 
@@ -72,7 +74,7 @@ server.delete('/:id', async(req, res) => {
         res.status(200).json(game)
       } else {
         res.status(404).json({
-          message: ` Game with ${id} not found`
+          message: ` Game with id ${id} not found`
         })
       }
     }
@@ -83,7 +85,27 @@ server.delete('/:id', async(req, res) => {
     }
   })
 
+  server.put('/:id', async(req, res) => {
+    const updatedGame = req.body;
+    const {id} = req.params;
 
+    try{
+        const gameUpdate = await GamesTestdb.update(id, updatedGame);
+
+        if(gameUpdate){
+            res.status(201).json({updatedGame})
+        } else {
+            res.status(451).json({
+                message: `Game id ${id} does not exist`
+            })
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+          message: `ERROR`
+        });
+      }
+  })
 
 
 // custom middleware
@@ -91,6 +113,7 @@ async function noDupGames(req, res, next) {
     const {title} = req.body;
 
     try {
+       // const titleExists = await GamesTestdb.findById(title);
         const titleExists = await GamesTestdb.findByTitle(title);
         if(titleExists) {
             res.status(405).json({

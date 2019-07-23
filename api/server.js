@@ -103,7 +103,7 @@ server.delete('/games/:id', async(req, res) => {
         res.status(200).json(game)
       } else {
         res.status(404).json({
-          message: ` Game with ${id} not found`
+          message: ` Game with id ${id} not found`
         })
       }
     }
@@ -114,6 +114,27 @@ server.delete('/games/:id', async(req, res) => {
     }
   })
 
+  server.put('/games/:id', async(req, res) => {
+    const updatedGame = req.body;
+    const {id} = req.params;
+
+    try{
+        const gameUpdate = await Games.update(id, updatedGame);
+
+        if(gameUpdate){
+            res.status(201).json({updatedGame})
+        } else {
+            res.status(451).json({
+                message: `Game id ${id} does not exist`
+            })
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+          message: `ERROR`
+        });
+      }
+  })
 
 // custom middleware
 async function noDupGames(req, res, next) {

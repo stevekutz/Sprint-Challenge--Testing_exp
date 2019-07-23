@@ -45,7 +45,10 @@ describe('Experiments with test_db TESTS  ', () => {
 
     
     beforeEach(async () => {
+        // refactor 1
         //await knexInstance.seed.run(process.env.DB_ENV);
+        
+        // refactor 2
         await db.seed.run(process.env.DB_ENV);
     })
     
@@ -85,10 +88,10 @@ describe('Experiments with test_db TESTS  ', () => {
             expect(nonexistingGame).toBeUndefined();
         })    
 
-        
+
         describe('Tests that involve POST & insert', () => {
             // need cleanup here ??
-           
+
             
             it(' should insert a game using POST', async () => {
                const insertedGame = {
@@ -117,7 +120,7 @@ describe('Experiments with test_db TESTS  ', () => {
                 });
 
                 /*
-                // REMOVE game
+                // REMOVE game -- not needed after adding in seeding before each test!!!
                 gameData = await GamesTest.getAll();
 
                 let insertedGameId = gameData[4].id.toString();
@@ -201,37 +204,83 @@ describe('Experiments with test_db TESTS  ', () => {
 
                // console.log('gameList **********   ',  gameList);
                 let deleteId = gameList[4].id.toString();
-                console.log('>>>>>>>>   deleteId ', deleteId);
+               // console.log('>>>>>>>>   deleteId ', deleteId);
                 
                 await GamesTest.remove(addedGame.id);
 
                 gameList = await GamesTest.getAll();
                 expect(gameList).toHaveLength(4);
                 
-
-                  // DOES NOT WORK returns 404   statusMessage: 'Not Found'
-           //     const badDeleteRequest = await req(server).delete('/test_db').send(deleteId)
-                  
-
+                  // DOES NOT WORK returns 404   statusMessage: 'Not Found' >> send MUST use a string
+                  // const badDeleteRequest = await req(server).delete('/test_db').send(deleteId)
             })
-            
-
             
             it('should not allow to delete a non-existing index ', async () => {
                 const badIndexGame = await GamesTest.remove(6);
                 expect(badIndexGame).toBe(0);
-               //  console.log('bad index game >>>>', badIndexGame);
-                
-               // const badDeleteRequest = await req(server).delete('/test_db').send('100000');
-               const badDeleteRequest = await req(server).delete('/test_db').send('1000'); //  
+  
+               let badDeleteRequest = await req(server).delete('/test_db').send('100');
                expect(badDeleteRequest.status).toBe(404);
-               // console.log('badDeleteRequest >>>>>>>>>>>>>>  ', badDeleteRequest.body);  
+               badDeleteRequest = await req(server).delete('/test_db/100'); 
+               expect(badDeleteRequest.status).toBe(404);
+               expect(badDeleteRequest.body).toEqual({});
             })
-            
-
-        
         })
 
+        describe('UPDATE Tests ', () => {
+  
+            it('should update first item in test db ', async () => {
+                const updatedGame = {
+                    'title': "Pacman has been updated",
+                     'genre': 'Classic',
+                     'releaseYear': 80, 
+                }
+            
+                // let gameData = await GamesTest.getAll();
+                const res = await req(server).get('/test_db');
+
+              //  let updatedList = await req(server).put('/test_db/1').send(updatedGame); // no workee
+                let updatedList = await GamesTest.update(1, updatedGame);   // works !!
+                expect(updatedList).toBe(1);
+
+                let gameList = await req(server).get('/test_db');
+                let gameData = await GamesTest.getAll();
+
+                 expect(gameList.body[0].title).toEqual(updatedGame.title);
+                 expect(gameList.body[0].genre).toEqual(updatedGame.genre);
+                 expect(gameList.body[0].releaseYear).toEqual(updatedGame.releaseYear);
+            })
+   
+            it('should NOT update non-existing id ', async () => {
+                const updatedGame = {
+                    'title': "Pacman has been updated",
+                     'genre': 'Classic',
+                     'releaseYear': 80, 
+                }
+    
+                const origGame = {
+                    "title": "Pacman_TEST_db",
+                    "genre": "Arcade",
+                    "releaseYear": 1980
+                }
+
+                const res = await req(server).get('/test_db');
+
+                let updatedList_put = await req(server).put('/test_db/1').send(updatedGame); // no workee
+                let updatedList_update = await GamesTest.update(100, updatedGame);   // works !!
+  
+                expect (updatedList_put.body).toEqual({});
+                expect (updatedList_update).toBe(0);
+
+                let gameList = await req(server).get('/test_db');
+                let gameData = await GamesTest.getAll();
+
+                expect(gameList.body[0].title).toEqual(origGame.title);
+                expect(gameList.body[0].genre).toEqual(origGame.genre);
+                expect(gameList.body[0].releaseYear).toEqual(origGame.releaseYear);
+            })
+
+        })
     })    
     
 });    
