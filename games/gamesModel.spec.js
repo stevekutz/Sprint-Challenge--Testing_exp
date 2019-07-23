@@ -172,7 +172,7 @@ describe('Sprint db tests ', () => {
            // console.log('>>>> res.body  \n', res.body);
             expect(res.body).toHaveLength(2);
         })
-
+//
         it('should NOT be able delete a game given an non-existing id', async () => {
             await db('games').insert(testInputs);
 
