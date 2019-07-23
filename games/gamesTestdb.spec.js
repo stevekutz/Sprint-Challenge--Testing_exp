@@ -3,6 +3,8 @@ const db = require('../data/dbConfig');
 const GamesTest = require('./gamesTestdbModel');
 const req = require('supertest');
 
+
+/*
 const knexInstance = require('knex')(
     {
         client: 'sqlite3',
@@ -18,8 +20,13 @@ const knexInstance = require('knex')(
         },
     }
   );
+*/
 
-//
+const knex = require('knex');
+const config = require('../knexfile');
+const knexInstance = knex(config.testing);
+
+// 
 
 describe('Experiments with test_db TESTS  ', () => {
 
