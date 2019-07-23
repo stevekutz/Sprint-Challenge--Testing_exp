@@ -4,7 +4,7 @@ const GamesTest = require('./gamesTestdbModel');
 const req = require('supertest');
 
 
-/*
+/*   First TRY
 const knexInstance = require('knex')(
     {
         client: 'sqlite3',
@@ -22,17 +22,31 @@ const knexInstance = require('knex')(
   );
 */
 
+//  refactor 1
+/*
 const knex = require('knex');
 const config = require('../knexfile');
 const knexInstance = knex(config.testing);
 
-// 
+console.log('##############  db ', config.testing);
+*/
+
+
+
+/*
+const knex = require('knex');
+const db = require('../data/dbConfig');
+console.log('##############  db ', db.environment);
+const knexInstance = knex(db);
+*/
+
 
 describe('Experiments with test_db TESTS  ', () => {
 
     
     beforeEach(async () => {
-        await knexInstance.seed.run(process.env.DB_ENV);
+        //await knexInstance.seed.run(process.env.DB_ENV);
+        await db.seed.run(process.env.DB_ENV);
     })
     
 
